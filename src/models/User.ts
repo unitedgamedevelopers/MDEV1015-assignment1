@@ -1,9 +1,12 @@
 import FirebaseService from '../services/FirebaseService';
 
-class User {
-  private email: string;
-  private password: string;
+interface User {
+  uid: string;
+  email: string;
+  password: string;
+}
 
+class User {
   constructor(email: string, password: string) {
     this.email = email;
     this.password = password;
