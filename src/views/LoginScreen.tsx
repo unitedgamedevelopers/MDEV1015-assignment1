@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {onAuthStateChanged} from 'firebase/auth';
 import {auth} from '../firebase';
-import User from '../models/User';
+import AuthController from '../controllers/AuthController';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -46,15 +46,22 @@ const LoginScreen = () => {
       return;
     }
 
-    const user = new User(email, password);
-    user.signIn().catch((error: Error) => setErrorMessage(error.message));
+    AuthController.signIn(email, password).catch((error: Error) =>
+      setErrorMessage(error.message),
+    );
   };
 
   const handleRegister = () => {
     setErrorMessage('');
 
-    const user = new User(email, password);
-    user.signUp().catch((error: Error) => setErrorMessage(error.message));
+    if (!email || !password) {
+      setErrorMessage('Please enter email and password!');
+      return;
+    }
+
+    AuthController.signUp(email, password).catch((error: Error) =>
+      setErrorMessage(error.message),
+    );
   };
 
   return (

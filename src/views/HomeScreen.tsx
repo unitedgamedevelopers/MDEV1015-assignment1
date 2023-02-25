@@ -2,18 +2,18 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import User from '../models/User';
+import AuthController from '../controllers/AuthController';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleLogout = () => {
-    User.signOut().then(() => navigation.replace('Login'));
+    AuthController.signOut().then(() => navigation.replace('Login'));
   };
 
   return (
     <View style={styles.container}>
-      <Text>Email: {User.getCurrentUser()?.email}</Text>
+      <Text>Email: {AuthController.getCurrentUser()?.email}</Text>
       <TouchableOpacity onPress={handleLogout} style={styles.button}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
