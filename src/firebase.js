@@ -2,7 +2,7 @@
 import {getApp, getApps, initializeApp} from 'firebase/app';
 import {getAuth} from 'firebase/auth';
 
-// Your web app's Firebase configuration
+// Your app's Firebase configuration
 const firebaseConfig = {
   apiKey: 'AIzaSyCazWDaXwSmMuIpKH1ZKXKt2AuwTFQi5oc',
   authDomain: 'mdev1015-assignment1.firebaseapp.com',

@@ -2,14 +2,14 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {signOut} from 'firebase/auth';
 import {auth} from '../firebase';
+import {logout} from '../services/AuthService';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleLogout = () => {
-    signOut(auth).then(() => navigation.replace('Login'));
+    logout().then(() => navigation.replace('Login'));
   };
 
   return (

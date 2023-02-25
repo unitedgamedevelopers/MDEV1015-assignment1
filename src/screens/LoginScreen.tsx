@@ -9,11 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
+import {onAuthStateChanged} from 'firebase/auth';
+import {login, register} from '../services/AuthService';
 import {auth} from '../firebase';
 
 const LoginScreen = () => {
@@ -49,23 +46,13 @@ const LoginScreen = () => {
       return;
     }
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        const user = userCredential.user;
-        console.log(user);
-      })
-      .catch(error => setErrorMessage(error.message));
+    login(email, password).catch(error => setErrorMessage(error.message));
   };
 
   const handleRegister = () => {
     setErrorMessage('');
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(userCredential => {
-        const user = userCredential.user;
-        console.log(user);
-      })
-      .catch(error => setErrorMessage(error.message));
+    register(email, password).catch(error => setErrorMessage(error.message));
   };
 
   return (
