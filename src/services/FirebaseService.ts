@@ -1,13 +1,11 @@
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import {getApp} from 'firebase/app';
 import {UserCredential} from '@firebase/auth';
 
-const auth = getAuth(getApp());
+import {auth} from '../firebase';
 
 class FirebaseService {
   static register(email: string, password: string): Promise<UserCredential> {
