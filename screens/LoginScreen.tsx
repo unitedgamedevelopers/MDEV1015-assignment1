@@ -1,16 +1,72 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {ParamListBase, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   KeyboardAvoidingView,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
-  Text,
 } from 'react-native';
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import {auth} from '../firebase';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
+  const validateEmail = (value: string) => {
+    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(String(value).toLowerCase());
+  };
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, user => {
+      if (user) {
+        navigation.replace('Home');
+      }
+    });
+  }, [navigation]);
+
+  const handleLogin = () => {
+    setErrorMessage('');
+
+    if (!email || !password) {
+      setErrorMessage('Please enter your email and password!');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setErrorMessage('Please enter a valid email!');
+      return;
+    }
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch(error => setErrorMessage(error.message));
+  };
+
+  const handleRegister = () => {
+    setErrorMessage('');
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch(error => setErrorMessage(error.message));
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -26,21 +82,25 @@ const LoginScreen = () => {
         <TextInput
           placeholder="Password"
           value={password}
-          onChangeText={value => (setPassword(value))}
+          onChangeText={value => setPassword(value)}
           style={styles.input}
           secureTextEntry
         />
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={handleRegister}
           style={[styles.button, styles.buttonOutline]}>
           <Text style={styles.buttonTextOutline}>Register</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{errorMessage}</Text>
       </View>
     </KeyboardAvoidingView>
   );
@@ -93,5 +153,12 @@ const styles = StyleSheet.create({
     color: '#2c6bed',
     fontWeight: '700',
     fontSize: 16,
+  },
+  errorContainer: {
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
   },
 });
