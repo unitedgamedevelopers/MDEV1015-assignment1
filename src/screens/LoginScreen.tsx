@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -9,9 +9,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {onAuthStateChanged} from 'firebase/auth';
-import {login, register} from '../services/FirebaseService';
-import {auth} from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
+import User from '../models/User';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -46,13 +46,15 @@ const LoginScreen = () => {
       return;
     }
 
-    login(email, password).catch(error => setErrorMessage(error.message));
+    const user = new User(email, password);
+    user.signIn().catch(error => setErrorMessage(error.message));
   };
 
   const handleRegister = () => {
     setErrorMessage('');
 
-    register(email, password).catch(error => setErrorMessage(error.message));
+    const user = new User(email, password);
+    user.signUp().catch(error => setErrorMessage(error.message));
   };
 
   return (
