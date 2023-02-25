@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import {onAuthStateChanged} from 'firebase/auth';
-import {login, register} from '../services/AuthService';
+import {login, register} from '../services/FirebaseService';
 import {auth} from '../firebase';
 
 const LoginScreen = () => {

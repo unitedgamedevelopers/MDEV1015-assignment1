@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {auth} from '../firebase';
-import {logout} from '../services/AuthService';
+import {logout} from '../services/FirebaseService';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
