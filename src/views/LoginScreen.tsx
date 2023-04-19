@@ -13,6 +13,7 @@ import {onAuthStateChanged} from 'firebase/auth';
 import {auth} from '../firebase';
 import User from '../models/User';
 import AuthContext from '../contexts/AuthContext';
+import {validateEmail} from '../utils/utils';
 
 const LoginScreen = () => {
   const {authService} = useContext(AuthContext);
@@ -21,11 +22,6 @@ const LoginScreen = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
-  const validateEmail = (value: string) => {
-    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return re.test(String(value).toLowerCase());
-  };
 
   useEffect(() => {
     return onAuthStateChanged(auth, user => {
