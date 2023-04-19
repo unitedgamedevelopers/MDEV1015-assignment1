@@ -1,19 +1,20 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import AuthController from '../controllers/AuthController';
+import AuthContext from '../contexts/AuthContext';
 
 const HomeScreen = () => {
+  const {user, authService} = useContext(AuthContext);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleLogout = () => {
-    AuthController.signOut().then(() => navigation.replace('Login'));
+    authService.signOut().then(() => navigation.replace('Login'));
   };
 
   return (
     <View style={styles.container}>
-      <Text>Email: {AuthController.getCurrentUser()?.email}</Text>
+      <Text>Email: {user?.email}</Text>
       <TouchableOpacity onPress={handleLogout} style={styles.button}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>

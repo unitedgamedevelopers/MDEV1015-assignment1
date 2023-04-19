@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import {onAuthStateChanged} from 'firebase/auth';
 import {auth} from '../firebase';
-import AuthController from '../controllers/AuthController';
+import User from '../models/User';
+import AuthContext from '../contexts/AuthContext';
 
 const LoginScreen = () => {
+  const {authService} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -46,9 +48,9 @@ const LoginScreen = () => {
       return;
     }
 
-    AuthController.signIn(email, password).catch((error: Error) =>
-      setErrorMessage(error.message),
-    );
+    authService
+      .signIn(new User(email, password))
+      .catch((error: Error) => setErrorMessage(error.message));
   };
 
   const handleRegister = () => {
@@ -59,9 +61,9 @@ const LoginScreen = () => {
       return;
     }
 
-    AuthController.signUp(email, password).catch((error: Error) =>
-      setErrorMessage(error.message),
-    );
+    authService
+      .signUp(new User(email, password))
+      .catch((error: Error) => setErrorMessage(error.message));
   };
 
   return (
