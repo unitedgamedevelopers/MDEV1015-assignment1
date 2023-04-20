@@ -13,10 +13,12 @@ import {onAuthStateChanged} from 'firebase/auth';
 import {auth} from '../firebase';
 import User from '../models/User';
 import AuthContext from '../contexts/AuthContext';
+import ThemeContext, {Theme} from '../contexts/ThemeContext';
 import {validateEmail} from '../utils/utils';
 
 const LoginScreen = () => {
   const {authService} = useContext(AuthContext);
+  const theme = useContext(ThemeContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -62,14 +64,16 @@ const LoginScreen = () => {
       .catch((error: Error) => setErrorMessage(error.message));
   };
 
+  const themedStyles = getThemedStyles(theme);
+
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <View style={styles.formContainer}>
+    <KeyboardAvoidingView style={themedStyles.container} behavior="padding">
+      <View style={themedStyles.formContainer}>
         <TextInput
           placeholder="Email"
           value={email}
           onChangeText={value => setEmail(value)}
-          style={styles.input}
+          style={themedStyles.input}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -77,24 +81,24 @@ const LoginScreen = () => {
           placeholder="Password"
           value={password}
           onChangeText={value => setPassword(value)}
-          style={styles.input}
+          style={themedStyles.input}
           secureTextEntry
         />
       </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
+      <View style={themedStyles.buttonContainer}>
+        <TouchableOpacity onPress={handleLogin} style={themedStyles.button}>
+          <Text style={themedStyles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleRegister}
-          style={[styles.button, styles.buttonOutline]}>
-          <Text style={styles.buttonTextOutline}>Register</Text>
+          style={[themedStyles.button, themedStyles.buttonOutline]}>
+          <Text style={themedStyles.buttonTextOutline}>Register</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{errorMessage}</Text>
+      <View style={themedStyles.errorContainer}>
+        <Text style={themedStyles.errorText}>{errorMessage}</Text>
       </View>
     </KeyboardAvoidingView>
   );
@@ -102,57 +106,59 @@ const LoginScreen = () => {
 
 export default LoginScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ececec',
-  },
-  formContainer: {
-    width: '90%',
-  },
-  input: {
-    backgroundColor: 'white',
-    paddingHorizontal: 15,
-    paddingVertical: 20,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    width: '90%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  button: {
-    backgroundColor: '#2c6bed',
-    width: '100%',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  buttonOutline: {
-    backgroundColor: 'white',
-    marginTop: 10,
-    borderColor: '#2c6bed',
-    borderWidth: 2,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  buttonTextOutline: {
-    color: '#2c6bed',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  errorContainer: {
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  errorText: {
-    color: 'red',
-  },
-});
+const getThemedStyles = (theme: Theme) => {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.colors.secondary,
+    },
+    formContainer: {
+      width: '90%',
+    },
+    input: {
+      backgroundColor: theme.colors.white,
+      paddingHorizontal: theme.input.paddingHorizontal,
+      paddingVertical: theme.input.paddingVertical,
+      borderRadius: theme.borderRadius,
+      marginBottom: 10,
+    },
+    buttonContainer: {
+      width: '90%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 15,
+    },
+    button: {
+      backgroundColor: theme.colors.primary,
+      width: '100%',
+      padding: theme.button.padding,
+      borderRadius: theme.borderRadius,
+      alignItems: 'center',
+    },
+    buttonOutline: {
+      backgroundColor: theme.colors.white,
+      marginTop: 10,
+      borderColor: theme.colors.primary,
+      borderWidth: 2,
+    },
+    buttonText: {
+      color: theme.colors.white,
+      fontWeight: theme.fontWeight.bold,
+      fontSize: theme.fontSize.medium,
+    },
+    buttonTextOutline: {
+      color: theme.colors.primary,
+      fontWeight: theme.fontWeight.bold,
+      fontSize: theme.fontSize.medium,
+    },
+    errorContainer: {
+      marginTop: 30,
+      alignItems: 'center',
+    },
+    errorText: {
+      color: theme.colors.error,
+    },
+  });
+};
