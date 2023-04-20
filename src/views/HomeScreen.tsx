@@ -3,20 +3,24 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ParamListBase, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import AuthContext from '../contexts/AuthContext';
+import ThemeContext, {Theme} from '../contexts/ThemeContext';
 
 const HomeScreen = () => {
   const {user, authService} = useContext(AuthContext);
+  const theme = useContext(ThemeContext);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleLogout = () => {
     authService.signOut().then(() => navigation.replace('Login'));
   };
 
+  const themedStyles = getThemedStyles(theme);
+
   return (
-    <View style={styles.container}>
+    <View style={themedStyles.container}>
       <Text>Email: {user?.email}</Text>
-      <TouchableOpacity onPress={handleLogout} style={styles.button}>
-        <Text style={styles.buttonText}>Logout</Text>
+      <TouchableOpacity onPress={handleLogout} style={themedStyles.button}>
+        <Text style={themedStyles.buttonText}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -24,23 +28,25 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    backgroundColor: '#2c6bed',
-    width: '50%',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 30,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-});
+const getThemedStyles = (theme: Theme) => {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    button: {
+      backgroundColor: theme.colors.primary,
+      borderRadius: theme.borderRadius,
+      width: '50%',
+      padding: 15,
+      alignItems: 'center',
+      marginTop: 30,
+    },
+    buttonText: {
+      color: theme.colors.white,
+      fontWeight: theme.fontWeight.bold,
+      fontSize: theme.fontSize.medium,
+    },
+  });
+};
